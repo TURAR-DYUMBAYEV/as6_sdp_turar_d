@@ -1,0 +1,41 @@
+@startuml
+interface Subject<T>
+interface Observer<T>
+class EventSubject<T>
+class PriceUpdateSource
+class StockUpdateSource
+class MarketplaceAggregator
+Subject <|.. EventSubject
+EventSubject <|-- PriceUpdateSource
+EventSubject <|-- StockUpdateSource
+Observer <|.. MarketplaceAggregator
+Subject <|.. MarketplaceAggregator
+interface CatalogElement
+abstract class CatalogContainer
+class MarketplaceCatalog
+class ProductCategory
+class PhysicalProduct
+class DigitalProduct
+class ServiceProduct
+class SubscriptionProduct
+interface CatalogVisitor<R>
+class TaxCalculationVisitor
+class CatalogStatisticsVisitor
+class ProductFilterVisitor
+class XmlExportVisitor
+class ShippingCostVisitor
+CatalogElement <|.. CatalogContainer
+CatalogContainer <|-- MarketplaceCatalog
+CatalogContainer <|-- ProductCategory
+CatalogElement <|.. PhysicalProduct
+CatalogElement <|.. DigitalProduct
+CatalogElement <|.. ServiceProduct
+CatalogElement <|.. SubscriptionProduct
+CatalogVisitor <|.. TaxCalculationVisitor
+CatalogVisitor <|.. CatalogStatisticsVisitor
+CatalogVisitor <|.. ProductFilterVisitor
+CatalogVisitor <|.. XmlExportVisitor
+CatalogVisitor <|.. ShippingCostVisitor
+class MarketplaceInspectionService
+StockUpdateSource --> MarketplaceInspectionService
+@enduml
