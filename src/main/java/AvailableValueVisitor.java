@@ -12,4 +12,5 @@ class AvailableValueVisitor extends TraversingVisitor<BigDecimal> {
     public BigDecimal visit(DigitalProduct product) { return add(product); }
     public BigDecimal visit(ServiceProduct product) { return add(product); }
     public BigDecimal visit(SubscriptionProduct product) { return add(product); }
+    public BigDecimal visit(GiftCardProduct product) { return add(product); }
 }
