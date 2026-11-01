@@ -1,0 +1,138 @@
+@startuml
+hide empty members
+skinparam classAttributeIconSize 0
+package "observer" {
+interface "Observer<T>" as Observer {
+  +onEvent(event: T)
+}
+interface "Subject<T>" as Subject {
+  +subscribe(type, observer)
+  +unsubscribe(type, observer)
+  +publish(event: T)
+}
+class EventSubject
+Subject <|.. EventSubject
+EventSubject o-- Observer : registrations
+}
+package "events" {
+interface MarketEvent
+class StockPriceChangedEvent <<record>>
+class TradingVolumeChangedEvent <<record>>
+class MarketAlertEvent <<record>>
+class MarketSummaryEvent <<record>>
+class PortfolioReportEvent <<record>>
+MarketEvent <|.. StockPriceChangedEvent
+MarketEvent <|.. TradingVolumeChangedEvent
+MarketEvent <|.. MarketAlertEvent
+MarketEvent <|.. MarketSummaryEvent
+MarketEvent <|.. PortfolioReportEvent
+}
+package "sources" {
+class StockPriceSource
+class TradingVolumeSource
+StockPriceSource --> Subject : injected price subject
+TradingVolumeSource --> Subject : injected volume subject
+StockPriceSource ..> StockPriceChangedEvent : creates
+TradingVolumeSource ..> TradingVolumeChangedEvent : creates
+}
+package "listeners" {
+class PriceAlertListener
+class VolumeAlertListener
+class InvestorNotificationListener
+class MarketAnalyticsListener
+class MarketCacheListener
+class MarketEventAggregator
+class MarketSummaryListener
+}
+Observer <|.. PriceAlertListener
+Observer <|.. VolumeAlertListener
+Observer <|.. InvestorNotificationListener
+Observer <|.. MarketAnalyticsListener
+Observer <|.. MarketCacheListener
+Observer <|.. MarketEventAggregator
+Observer <|.. MarketSummaryListener
+Subject <|.. MarketEventAggregator
+MarketEventAggregator --> Subject : injected output
+MarketEventAggregator ..> MarketSummaryEvent : publishes
+MarketSummaryListener ..> MarketSummaryEvent : receives
+PriceAlertListener --> Subject : alerts
+VolumeAlertListener --> Subject : alerts
+InvestorNotificationListener ..> MarketAlertEvent
+package "visitor" {
+interface FinancialElement {
+  +accept(visitor): R
+}
+interface "FinancialVisitor<R>" as FinancialVisitor {
+  +visit(portfolio): R
+  +visit(account): R
+  +visit(group): R
+  +visit(stock): R
+  +visit(bond): R
+  +visit(etf): R
+  +visit(option): R
+  +visit(commodity): R
+}
+abstract class Holding
+class ExchangePortfolio <<record>>
+class InvestmentAccount <<record>>
+class AssetGroup <<record>>
+FinancialElement <|.. Holding
+FinancialElement <|.. ExchangePortfolio
+FinancialElement <|.. InvestmentAccount
+FinancialElement <|.. AssetGroup
+ExchangePortfolio o-- FinancialElement : children
+InvestmentAccount o-- FinancialElement : children
+AssetGroup o-- FinancialElement : children
+FinancialElement ..> FinancialVisitor : accept
+class StockHolding
+Holding <|-- StockHolding
+class BondHolding
+Holding <|-- BondHolding
+class EtfHolding
+Holding <|-- EtfHolding
+class OptionHolding
+Holding <|-- OptionHolding
+class CommodityHolding
+Holding <|-- CommodityHolding
+class PortfolioValuationVisitor
+FinancialVisitor <|.. PortfolioValuationVisitor
+class PortfolioStatisticsVisitor
+FinancialVisitor <|.. PortfolioStatisticsVisitor
+class RiskFilterVisitor
+FinancialVisitor <|.. RiskFilterVisitor
+class JsonExportVisitor
+FinancialVisitor <|.. JsonExportVisitor
+class DividendIncomeVisitor
+FinancialVisitor <|.. DividendIncomeVisitor
+}
+package "integration" {
+class PortfolioInspectionListener
+class PortfolioReportListener
+Observer <|.. PortfolioInspectionListener
+Observer <|.. PortfolioReportListener
+PortfolioInspectionListener --> AssetGroup : symbol index
+PortfolioInspectionListener ..> PortfolioValuationVisitor : invokes
+PortfolioInspectionListener --> Subject : report output
+PortfolioInspectionListener ..> PortfolioReportEvent : creates
+PortfolioReportListener ..> PortfolioReportEvent : stores
+}
+package "app" {
+class Main
+class Application <<composition root>>
+class ConsoleApp
+Main ..> Application : creates
+Main --> ConsoleApp : runs
+Application ..> ConsoleApp : constructs
+Application ..> EventSubject : creates independent subjects
+Application ..> StockPriceSource
+Application ..> TradingVolumeSource
+Application ..> MarketEventAggregator
+Application ..> PortfolioInspectionListener
+Application ..> ExchangePortfolio
+}
+class MarketSimulation
+ConsoleApp --> MarketSimulation
+MarketSimulation --> StockPriceSource
+MarketSimulation --> TradingVolumeSource
+MarketSimulation ..> ExecutorService : owns lifecycle
+@enduml
