@@ -10,4 +10,5 @@ public interface FinancialVisitor<R> {
     R visit(BondHolding holding);
     R visit(EtfHolding holding);
     R visit(OptionHolding holding);
+    R visit(CommodityHolding holding);
 }

@@ -33,4 +33,5 @@ public final class PortfolioStatisticsVisitor implements FinancialVisitor<Portfo
     public Statistics visit(BondHolding h) { return count(h); }
     public Statistics visit(EtfHolding h) { return count(h); }
     public Statistics visit(OptionHolding h) { return count(h); }
+    public Statistics visit(CommodityHolding h) { return count(h); }
 }

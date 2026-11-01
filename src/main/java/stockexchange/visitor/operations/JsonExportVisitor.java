@@ -39,4 +39,5 @@ public final class JsonExportVisitor implements FinancialVisitor<String> {
     public String visit(BondHolding h) { return holding(h); }
     public String visit(EtfHolding h) { return holding(h); }
     public String visit(OptionHolding h) { return holding(h); }
+    public String visit(CommodityHolding h) { return holding(h); }
 }

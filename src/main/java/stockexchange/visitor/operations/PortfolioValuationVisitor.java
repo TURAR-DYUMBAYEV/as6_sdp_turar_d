@@ -30,4 +30,5 @@ public final class PortfolioValuationVisitor implements FinancialVisitor<BigDeci
     public BigDecimal visit(BondHolding h) { return value(h, 1); }
     public BigDecimal visit(EtfHolding h) { return value(h, 1); }
     public BigDecimal visit(OptionHolding h) { return value(h, 100); }
+    public BigDecimal visit(CommodityHolding h) { return value(h, 1); }
 }

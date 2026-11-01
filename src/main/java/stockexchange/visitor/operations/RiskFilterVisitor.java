@@ -18,4 +18,5 @@ public final class RiskFilterVisitor implements FinancialVisitor<List<Holding>> 
     public List<Holding> visit(BondHolding h) { return match(h); }
     public List<Holding> visit(EtfHolding h) { return match(h); }
     public List<Holding> visit(OptionHolding h) { return match(h); }
+    public List<Holding> visit(CommodityHolding h) { return match(h); }
 }

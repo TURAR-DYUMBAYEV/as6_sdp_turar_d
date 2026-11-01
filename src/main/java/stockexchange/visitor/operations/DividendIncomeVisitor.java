@@ -22,4 +22,5 @@ public final class DividendIncomeVisitor implements FinancialVisitor<BigDecimal>
     public BigDecimal visit(BondHolding h) { return income(h, "0.05"); }
     public BigDecimal visit(EtfHolding h) { return income(h, "0.03"); }
     public BigDecimal visit(OptionHolding h) { return BigDecimal.ZERO; }
+    public BigDecimal visit(CommodityHolding h) { return BigDecimal.ZERO; }
 }
